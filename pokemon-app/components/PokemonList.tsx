@@ -3,12 +3,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { useMemo, useState } from "react";
 import { ActivityIndicator, RefreshControl, Text, View } from "react-native";
-
-interface PokemonData {
-  id: string;
-  name: string;
-  imageUrl: string;
-}
+import { PokemonData } from "./types";
+import PokemonCard from "./PokemonCard";
 
 interface Page {
   pokemons: PokemonData[];
@@ -36,7 +32,7 @@ const fetchPokemonData = (id: number): Promise<PokemonData | null> => {
     });
 };
 
-export default function TestList() {
+export default function PokemonList() {
   // const [message, setMessage] = useState<string>("nie wiem");
 
   const fetchPokemons = async (pageParam: number = 0) => {
@@ -82,7 +78,7 @@ export default function TestList() {
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <FlashList
         data={pokemons}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => String(item.id)}
         refreshControl={
           <RefreshControl
             tintColor={"blue"}
@@ -90,14 +86,7 @@ export default function TestList() {
             onRefresh={refetch}
           />
         }
-        renderItem={({ item }) => (
-          // <Text>{item.name}</Text>
-          <Image
-            source={{ uri: item.imageUrl }}
-            style={{ width: 200, height: 200, marginVertical: 5 }}
-            cachePolicy="memory-disk"
-          />
-        )}
+        renderItem={({ item }) => <PokemonCard pokemonData={item} />}
         onEndReachedThreshold={0.2}
         onEndReached={() =>
           hasNextPage && !isFetchingNextPage && fetchNextPage()
