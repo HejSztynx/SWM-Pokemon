@@ -1,4 +1,4 @@
-import { PokemonData } from "@/components/types";
+import { PokemonData, PokemonTypeDto } from "@/components/types";
 
 interface Page {
   pokemons: PokemonData[];
@@ -23,7 +23,14 @@ const fetchPokemonData = (id: number): Promise<PokemonData | null> => {
       id: data.id.toString(),
       name: data.name,
       imageUrl: data.sprites.front_default,
+      types: data.types,
+      cryUrl: data.cries.latest,
     }))
+    .then((data) => {
+      const typesDto: PokemonTypeDto[] = data.types;
+      data.types = typesDto.map((typeDto) => typeDto.type);
+      return data;
+    })
     .catch((err) => {
       console.error(err);
       return null;
@@ -44,7 +51,6 @@ const fetchPokemons = async (pageParam: number = 0) => {
 
 export const fetchPokemonPage = async ({ pageParam = 0 }): Promise<Page> => {
   const pokemons: PokemonData[] = await fetchPokemons(pageParam);
-  console.log("page " + pageParam);
 
   return { pokemons, nextPage: pageParam + 1 };
 };

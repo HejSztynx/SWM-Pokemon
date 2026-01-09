@@ -1,13 +1,20 @@
 import { Image } from "expo-image";
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import { PokemonData } from "./types";
+import { typeColors } from "./constants";
 
 const PokemonCard: React.FC<{
   pokemonData: PokemonData;
   onPress: () => void;
 }> = ({ pokemonData, onPress }) => {
-  const { id, name, imageUrl } = pokemonData;
+  const { id, name, imageUrl, types } = pokemonData;
 
   return (
     <TouchableOpacity onPress={onPress}>
@@ -19,7 +26,22 @@ const PokemonCard: React.FC<{
         />
         <View style={styles.infoContainer}>
           <Text style={styles.name}>{name}</Text>
-          <Text style={styles.id}>#{id.toString().padStart(4, "0")}</Text>
+          <View style={styles.typesContainer}>
+            {types.map((type, i) => {
+              return (
+                <Text
+                  key={i}
+                  style={[
+                    styles.types,
+                    { backgroundColor: typeColors.get(type.name) || "#000" },
+                  ]}
+                >
+                  {type.name}
+                </Text>
+              );
+            })}
+          </View>
+          <Text style={styles.id}>#{id.toString().padStart(3, "0")}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -28,6 +50,8 @@ const PokemonCard: React.FC<{
 
 const styles = StyleSheet.create({
   card: {
+    borderColor: "#ccc",
+    borderWidth: 1,
     backgroundColor: "#fff",
     borderRadius: 10,
     shadowColor: "#000",
@@ -38,6 +62,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginHorizontal: 25,
     overflow: "hidden",
+    alignItems: "center",
   },
   image: {
     width: "100%",
@@ -45,16 +70,28 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   infoContainer: {
+    alignItems: "center",
+    gap: 5,
     padding: 10,
   },
   name: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "light",
     marginBottom: 5,
   },
   id: {
     fontSize: 12,
     color: "#666",
+  },
+  typesContainer: {
+    flexDirection: "row",
+    gap: 5,
+  },
+  types: {
+    fontSize: 14,
+    color: "white",
+    borderRadius: 5,
+    padding: 2,
   },
 });
 

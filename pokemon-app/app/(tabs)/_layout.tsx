@@ -1,19 +1,29 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Stack, Tabs } from "expo-router";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 1,
-    },
-  },
-});
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Tabs } from "expo-router";
 
 export default function TabLayout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>
-      <Tabs.Screen name="index" />
-      <Tabs.Screen name="list" />
+      <Tabs.Screen
+        name="index"
+        options={{
+          tabBarLabel: "Favorite",
+          headerTitle: "My Favorite Pokemon",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="favorite" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="list"
+        options={{
+          tabBarLabel: "Pokemon List",
+          headerTitle: "Pokemon List",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="list" color={color} size={size} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }

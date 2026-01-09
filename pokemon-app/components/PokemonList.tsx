@@ -1,6 +1,5 @@
 import { FlashList } from "@shopify/flash-list";
 import { useInfiniteQuery } from "@tanstack/react-query";
-
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, RefreshControl, View } from "react-native";
 import { PokemonData } from "./types";
@@ -44,7 +43,7 @@ export default function PokemonList() {
 
   return (
     <GestureHandlerRootView>
-      <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={{ flex: 1 }}>
         <FlashList
           data={pokemons}
           keyExtractor={(item) => String(item.id)}
