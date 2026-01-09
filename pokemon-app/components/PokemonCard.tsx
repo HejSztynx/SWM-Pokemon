@@ -19,7 +19,7 @@ const PokemonCard: React.FC<{
         />
         <View style={styles.infoContainer}>
           <Text style={styles.name}>{name}</Text>
-          <Text style={styles.id}>#{id.toString().padStart(3, "0")}</Text>
+          <Text style={styles.id}>#{id.toString().padStart(4, "0")}</Text>
         </View>
       </View>
     </TouchableOpacity>
