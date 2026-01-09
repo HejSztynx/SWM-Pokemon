@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { PokemonContextData, PokemonData } from "../types";
-import { defaultPokemon } from "../constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const defaultPokemonContextData: PokemonContextData = {
   favoritePokemon: null,
@@ -11,14 +11,38 @@ const PokemonContext = createContext<PokemonContextData>(
   defaultPokemonContextData
 );
 
-export const usePokemonContext = () => useContext(PokemonContext);
-
 export const PokemonProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [favoritePokemon, setFavoritePokemon] = useState<PokemonData | null>(
     null
   );
+
+  useEffect(() => {
+    const loadFavoritePokemon = async () => {
+      const pokemonJson = await AsyncStorage.getItem("favoritePokemon");
+      if (pokemonJson) {
+        setFavoritePokemon(JSON.parse(pokemonJson));
+      }
+    };
+
+    loadFavoritePokemon();
+  }, []);
+
+  useEffect(() => {
+    const saveFavoritePokemon = async () => {
+      if (favoritePokemon) {
+        await AsyncStorage.setItem(
+          "favoritePokemon",
+          JSON.stringify(favoritePokemon)
+        );
+      } else {
+        await AsyncStorage.removeItem("favoritePokemon");
+      }
+    };
+
+    saveFavoritePokemon();
+  }, [favoritePokemon]);
 
   const pokemonContext: PokemonContextData = {
     favoritePokemon,
@@ -30,4 +54,11 @@ export const PokemonProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
     </PokemonContext.Provider>
   );
+};
+
+export const usePokemonContext = () => {
+  const context = useContext(PokemonContext);
+  if (!context)
+    throw new Error("usePokemon must be used within a PokemonProvider");
+  return context;
 };

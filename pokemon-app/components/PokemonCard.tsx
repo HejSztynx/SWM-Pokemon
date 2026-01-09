@@ -1,25 +1,28 @@
 import { Image } from "expo-image";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { PokemonData } from "./types";
 
-const PokemonCard: React.FC<{ pokemonData: PokemonData }> = ({
-  pokemonData,
-}) => {
+const PokemonCard: React.FC<{
+  pokemonData: PokemonData;
+  onPress: () => void;
+}> = ({ pokemonData, onPress }) => {
   const { id, name, imageUrl } = pokemonData;
 
   return (
-    <View style={styles.card}>
-      <Image
-        source={{ uri: imageUrl }}
-        style={{ width: 200, height: 200, marginVertical: 5 }}
-        cachePolicy="memory-disk"
-      />
-      <View style={styles.infoContainer}>
-        <Text style={styles.name}>{name}</Text>
-        <Text style={styles.id}>#{id.toString().padStart(3, "0")}</Text>
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.card}>
+        <Image
+          source={{ uri: imageUrl }}
+          style={{ width: 200, height: 200, marginVertical: 5 }}
+          cachePolicy="memory-disk"
+        />
+        <View style={styles.infoContainer}>
+          <Text style={styles.name}>{name}</Text>
+          <Text style={styles.id}>#{id.toString().padStart(3, "0")}</Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

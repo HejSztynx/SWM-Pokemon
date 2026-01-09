@@ -1,10 +1,20 @@
 import { FlashList } from "@shopify/flash-list";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
-import { useMemo, useState } from "react";
-import { ActivityIndicator, RefreshControl, Text, View } from "react-native";
+import { useCallback, useMemo, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Button,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { PokemonData } from "./types";
 import PokemonCard from "./PokemonCard";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { usePokemonContext } from "./context/PokemonContext";
 
 interface Page {
   pokemons: PokemonData[];
@@ -34,6 +44,14 @@ const fetchPokemonData = (id: number): Promise<PokemonData | null> => {
 
 export default function PokemonList() {
   // const [message, setMessage] = useState<string>("nie wiem");
+
+  const { setFavoritePokemon } = usePokemonContext();
+
+  const bottomSheetRef = useRef<null | BottomSheet>(null);
+
+  const [selectedPokemon, setSelectedPokemon] = useState<PokemonData | null>(
+    null
+  );
 
   const fetchPokemons = async (pageParam: number = 0) => {
     try {
@@ -74,33 +92,74 @@ export default function PokemonList() {
     [data]
   );
 
+  const handleOpenBottomSheet = useCallback((pokemon: PokemonData) => {
+    setSelectedPokemon(pokemon);
+    console.log("otwieram " + pokemon.name);
+    bottomSheetRef.current?.expand();
+  }, []);
+
+  const handlePressSetFavorite = () => {
+    setFavoritePokemon(selectedPokemon);
+  };
+
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <FlashList
-        data={pokemons}
-        keyExtractor={(item) => String(item.id)}
-        refreshControl={
-          <RefreshControl
-            tintColor={"blue"}
-            refreshing={isRefetching}
-            onRefresh={refetch}
-          />
-        }
-        renderItem={({ item }) => <PokemonCard pokemonData={item} />}
-        onEndReachedThreshold={0.2}
-        onEndReached={() =>
-          hasNextPage && !isFetchingNextPage && fetchNextPage()
-        }
-        ListFooterComponent={
-          isFetchingNextPage ? (
-            <ActivityIndicator
-              color="blue"
-              size="small"
-              style={{ marginBottom: 5 }}
+    <GestureHandlerRootView>
+      <View style={{ flex: 1, backgroundColor: "white" }}>
+        <FlashList
+          data={pokemons}
+          keyExtractor={(item) => String(item.id)}
+          refreshControl={
+            <RefreshControl
+              tintColor={"blue"}
+              refreshing={isRefetching}
+              onRefresh={refetch}
             />
-          ) : null
-        }
-      />
-    </View>
+          }
+          renderItem={({ item }) => (
+            <PokemonCard
+              pokemonData={item}
+              onPress={() => handleOpenBottomSheet(item)}
+            />
+          )}
+          onEndReachedThreshold={0.2}
+          onEndReached={() =>
+            hasNextPage && !isFetchingNextPage && fetchNextPage()
+          }
+          ListFooterComponent={
+            isFetchingNextPage ? (
+              <ActivityIndicator
+                color="blue"
+                size="small"
+                style={{ marginBottom: 5 }}
+              />
+            ) : null
+          }
+        />
+        <BottomSheet ref={bottomSheetRef}>
+          {selectedPokemon && (
+            <BottomSheetView>
+              <View style={styles.sheetContent}>
+                <Text style={styles.title}>{selectedPokemon.name}</Text>
+                <Button
+                  title="Set as favorite"
+                  onPress={handlePressSetFavorite}
+                />
+              </View>
+            </BottomSheetView>
+          )}
+        </BottomSheet>
+      </View>
+    </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create({
+  sheetContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+});
