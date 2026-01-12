@@ -84,11 +84,6 @@ export default function App() {
     return <Text>No Device</Text>;
   }
 
-  //   const height = device.formats.videoHeight;
-  const format = useCameraFormat(device, [{ videoAspectRatio: 4 / 3 }]);
-
-  //   console.log("format: " + camera.current?.props.format);
-
   return (
     <View style={{ flex: 1 }}>
       <Camera
