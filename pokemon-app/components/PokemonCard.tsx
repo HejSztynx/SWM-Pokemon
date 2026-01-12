@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { PokemonData } from "./types";
 import { typeColors } from "./constants";
+import { usePokemonContext } from "./context/PokemonContext";
 
 const PokemonCard: React.FC<{
   pokemonData: PokemonData;
@@ -16,9 +17,24 @@ const PokemonCard: React.FC<{
 }> = ({ pokemonData, onPress }) => {
   const { id, name, imageUrl, types } = pokemonData;
 
+  const { favoritePokemon } = usePokemonContext();
+
+  const isFavoritePokemon = (pokemonData: PokemonData): boolean => {
+    if (!favoritePokemon) return false;
+
+    return favoritePokemon.id == pokemonData.id;
+  };
+
+  const favoritePokemonStyle = isFavoritePokemon(pokemonData)
+    ? {
+        borderColor: "#f9ff54ff",
+        borderWidth: 5,
+      }
+    : {};
+
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={styles.card}>
+      <View style={[styles.card, favoritePokemonStyle]}>
         <Image
           source={{ uri: imageUrl }}
           style={{ width: 200, height: 200, marginVertical: 5 }}
