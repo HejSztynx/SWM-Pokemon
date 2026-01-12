@@ -13,6 +13,7 @@
       "bundleIdentifier": "com.anonymous.pokemonapp"
     },
     "android": {
+      "permissions": ["android.permission.WRITE_EXTERNAL_STORAGE"],
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, NativeModules, Platform } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useEffect, useState, useRef } from "react";
 import {
   Camera,
   runAsync,
   useCameraDevice,
+  useCameraFormat,
   useFrameProcessor,
 } from "react-native-vision-camera";
 import {
@@ -13,15 +14,23 @@ import {
 } from "react-native-vision-camera-face-detector";
 import { Worklets } from "react-native-worklets-core";
 import DetectedFaces from "./DetectedFaces";
+import { useIsFocused } from "@react-navigation/native";
+import { useAppState } from "@react-native-community/hooks";
+import TakePhotoButton from "./TakePhotoButton";
 
 export default function App() {
+  const device = useCameraDevice("front");
+  const isFocused = useIsFocused();
+  const appState = useAppState();
+  const isActive = isFocused && appState === "active";
+
+  const camera = useRef<Camera>(null);
+
   const faceDetectionOptions = useRef<FrameFaceDetectionOptions>({
     // detection options
   }).current;
 
   const [faces, setFaces] = useState<Face[]>([]);
-
-  const device = useCameraDevice("front");
   const { detectFaces, stopListeners } = useFaceDetector(faceDetectionOptions);
 
   useEffect(() => {
@@ -38,7 +47,6 @@ export default function App() {
       return;
     }
 
-    console.log("Format: " + device.formats.entries());
     device.formats.forEach((entry) => {
       //   console.log(entry);
     });
@@ -76,16 +84,24 @@ export default function App() {
     return <Text>No Device</Text>;
   }
 
+  //   const height = device.formats.videoHeight;
+  const format = useCameraFormat(device, [{ videoAspectRatio: 4 / 3 }]);
+
+  //   console.log("format: " + camera.current?.props.format);
+
   return (
-    <View style={{ flex: 1, width: 480, height: 640 }}>
-      {/* <View style={{ flex: 1 }}> */}
+    <View style={{ flex: 1 }}>
       <Camera
+        ref={camera}
         style={StyleSheet.absoluteFill}
         device={device}
-        isActive={true}
+        isActive={isActive}
+        photo={true}
         frameProcessor={frameProcessor}
+        resizeMode="cover"
       />
       <DetectedFaces faces={faces} />
+      <TakePhotoButton cameraRef={camera} />
     </View>
   );
 }

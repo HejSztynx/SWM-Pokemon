@@ -1,17 +1,10 @@
-import { StyleSheet, Text, View, NativeModules, Platform } from "react-native";
-import { useEffect, useState, useRef } from "react";
-import {
-  Camera,
-  runAsync,
-  useCameraDevice,
-  useFrameProcessor,
-} from "react-native-vision-camera";
-import {
-  Face,
-  useFaceDetector,
-  FrameFaceDetectionOptions,
-} from "react-native-vision-camera-face-detector";
-import { Worklets } from "react-native-worklets-core";
+import { Image } from "expo-image";
+import { StyleSheet, View } from "react-native";
+import { Face } from "react-native-vision-camera-face-detector";
+import { usePokemonContext } from "../context/PokemonContext";
+
+const dotRadius = 10;
+const imageDim = 200;
 
 export default function DetectedFaces({ faces }: { faces: Face[] }) {
   // {"bounds": {"height": 192, "width": 192, "x": 180, "y": 315},
@@ -23,86 +16,100 @@ export default function DetectedFaces({ faces }: { faces: Face[] }) {
   // videoHeight 480
   // videoWidth 640
 
+  const { favoritePokemon } = usePokemonContext();
+
+  // console.log("format: " + )
+
   const adjustboundsCoords = (faces: Face[]): Face[] => {
     return faces.map((face) => {
       face.bounds.height = (face.bounds.height / 3) * 4;
-      // face.bounds.width = (face.bounds.width / 3) * 4;
+      face.bounds.width = (face.bounds.width / 4) * 3;
       return face;
     });
   };
 
-  const numberOfViews = 10;
   const adjustedFaces = adjustboundsCoords(faces);
+  const pokemonImageUrl = favoritePokemon?.imageUrl;
 
   return (
     <View style={{ flex: 1 }}>
       {adjustedFaces.map((face, index) => (
-        <>
+        <View key={index}>
+          <Image
+            key={index}
+            source={{ uri: pokemonImageUrl }}
+            style={[
+              styles.foreheadImage,
+              {
+                marginVertical: 5,
+                right: face.bounds.x + face.bounds.width / 2 - imageDim / 2,
+                top: face.bounds.y + face.bounds.height / 5 - imageDim / 2,
+              },
+            ]}
+            cachePolicy="memory-disk"
+          />
           <View
-            key={index * numberOfViews + 5}
+            key={index * 10 + 2}
             style={[
               styles.faceDot,
               {
-                right: 0 - 10,
-                top: 0 - 10,
+                right: face.bounds.x + face.bounds.width / 2 - dotRadius,
+                top: face.bounds.y + face.bounds.height / 5 - dotRadius,
               },
             ]}
           />
           <View
-            key={index * numberOfViews}
+            key={index * 10 + 3}
             style={[
               styles.faceDot,
               {
-                right: face.bounds.x + face.bounds.width / 2,
-                top: face.bounds.y + face.bounds.height / 2,
+                right: face.bounds.x,
+                top: face.bounds.y,
               },
             ]}
           />
           <View
-            key={index * numberOfViews + 1}
+            key={index * 10 + 4}
+            style={[
+              styles.faceDot,
+              {
+                right: face.bounds.x + face.bounds.width,
+                top: face.bounds.y + face.bounds.height,
+              },
+            ]}
+          />
+          <View
+            key={index * 10 + 5}
+            style={[
+              styles.faceDot,
+              {
+                right: face.bounds.x + face.bounds.width,
+                top: face.bounds.y,
+              },
+            ]}
+          />
+          <View
+            key={index * 10 + 6}
+            style={[
+              styles.faceDot,
+              {
+                right: face.bounds.x,
+                top: face.bounds.y + face.bounds.height,
+              },
+            ]}
+          />
+          <View
+            key={index * 10 + 7}
             style={[
               styles.faceDot,
               {
                 backgroundColor: "blue",
-                right: face.bounds.x - 10,
-                top: face.bounds.y - 10,
+                right: 240,
+                top: face.bounds.y + face.bounds.height,
               },
             ]}
           />
-          <View
-            key={index * numberOfViews + 2}
-            style={[
-              styles.faceDot,
-              {
-                backgroundColor: "green",
-                right: face.bounds.x + face.bounds.width - 10,
-                top: face.bounds.y + face.bounds.height - 10,
-              },
-            ]}
-          />
-          <View
-            key={index * numberOfViews + 3}
-            style={[
-              styles.faceDot,
-              {
-                backgroundColor: "yellow",
-                right: face.bounds.x + face.bounds.width - 10,
-                top: face.bounds.y - 10,
-              },
-            ]}
-          />
-          <View
-            key={index * numberOfViews + 4}
-            style={[
-              styles.faceDot,
-              {
-                backgroundColor: "white",
-                right: face.bounds.x - 10,
-                top: face.bounds.y + face.bounds.height - 10,
-              },
-            ]}
-          />
-        </>
+        </View>
       ))}
     </View>
   );
@@ -111,9 +118,14 @@ export default function DetectedFaces({ faces }: { faces: Face[] }) {
 const styles = StyleSheet.create({
   faceDot: {
     position: "absolute",
-    width: 20,
-    height: 20,
+    width: dotRadius * 2,
+    height: dotRadius * 2,
     backgroundColor: "red",
     borderRadius: 10,
+  },
+  foreheadImage: {
+    height: imageDim,
+    width: imageDim,
+    position: "absolute",
   },
 });
