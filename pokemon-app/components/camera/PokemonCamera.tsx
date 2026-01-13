@@ -85,7 +85,7 @@ export default function App() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={StyleSheet.absoluteFill}>
       <Camera
         ref={camera}
         style={StyleSheet.absoluteFill}

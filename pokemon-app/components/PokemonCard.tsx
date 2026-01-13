@@ -13,8 +13,8 @@ import { usePokemonContext } from "./context/PokemonContext";
 
 const PokemonCard: React.FC<{
   pokemonData: PokemonData;
-  onPress: () => void;
-}> = ({ pokemonData, onPress }) => {
+  onPress?: () => void;
+}> = ({ pokemonData, onPress = () => {} }) => {
   const { id, name, imageUrl, types } = pokemonData;
 
   const { favoritePokemon } = usePokemonContext();

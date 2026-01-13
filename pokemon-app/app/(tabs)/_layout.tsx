@@ -37,8 +37,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="map"
         options={{
-          tabBarLabel: "map",
-          headerTitle: "map",
+          tabBarLabel: "Pokemon map",
+          headerTitle: "Pokemon map",
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="map" color={color} size={size} />
           ),
