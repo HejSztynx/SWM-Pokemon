@@ -9,8 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "config": {
+        "googleMapsApiKey": "process.env.GOOGLE_MAPS_API_KEY"
+      },
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.pokemonapp"
+      "bundleIdentifier": "com.sienkiewicz.pokemonapp"
     },
     "android": {
       "config": {
@@ -61,10 +64,20 @@
         {
           "android": {
             "minSdkVersion": 26
+          },
+          "ios": {
+            "deploymentTarget": "18.5",
+            "buildReactNativeFromSource": true
           }
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      [
+        "react-native-audio-api",
+        {
+          "disableFFmpeg": true
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
