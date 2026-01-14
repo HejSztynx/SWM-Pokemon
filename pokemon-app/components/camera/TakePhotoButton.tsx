@@ -9,8 +9,6 @@ export default function TakePhotoButton({
   cameraRef: React.RefObject<Camera | null>;
 }) {
   const takePicture = async () => {
-    console.log("PICTURE");
-
     if (!cameraRef) {
       return;
     }

@@ -19,6 +19,8 @@ import { useAppState } from "@react-native-community/hooks";
 import TakePhotoButton from "./TakePhotoButton";
 
 export default function App() {
+  const [viewSize, setViewSize] = useState({ width: 0, height: 0 });
+
   const device = useCameraDevice("front");
   const isFocused = useIsFocused();
   const appState = useAppState();
@@ -26,9 +28,12 @@ export default function App() {
 
   const camera = useRef<Camera>(null);
 
-  const faceDetectionOptions = useRef<FrameFaceDetectionOptions>({
-    // detection options
-  }).current;
+  const format = useCameraFormat(device, [
+    { videoResolution: "max" },
+    { photoResolution: "max" },
+  ]);
+
+  const faceDetectionOptions = useRef<FrameFaceDetectionOptions>({}).current;
 
   const [faces, setFaces] = useState<Face[]>([]);
   const { detectFaces, stopListeners } = useFaceDetector(faceDetectionOptions);
@@ -59,7 +64,12 @@ export default function App() {
 
   const handleDetectedFaces = Worklets.createRunOnJS((faces: Face[]) => {
     if (faces.length > 0) {
-      console.log("faces detected", faces);
+      console.log(
+        format?.videoHeight,
+        format?.videoWidth,
+        "faces detected",
+        faces
+      );
     }
     setFaces(faces);
   });
@@ -70,32 +80,41 @@ export default function App() {
       runAsync(frame, () => {
         "worklet";
         const faces = detectFaces(frame);
-        // ... chain some asynchronous frame processor
-        // ... do something asynchronously with frame
         handleDetectedFaces(faces);
       });
-      // ... chain frame processors
-      // ... do something with frame
     },
     [handleDetectedFaces]
   );
 
-  if (!device) {
+  if (!device || !format) {
     return <Text>No Device</Text>;
   }
 
   return (
-    <View style={StyleSheet.absoluteFill}>
+    <View
+      style={StyleSheet.absoluteFill}
+      onLayout={(event) => {
+        const { width, height } = event.nativeEvent.layout;
+        setViewSize({ width, height });
+      }}
+    >
       <Camera
         ref={camera}
         style={StyleSheet.absoluteFill}
         device={device}
+        format={format}
         isActive={isActive}
         photo={true}
         frameProcessor={frameProcessor}
         resizeMode="cover"
       />
-      <DetectedFaces faces={faces} />
+      <DetectedFaces
+        faces={faces}
+        cameraWidth={format.videoWidth}
+        cameraHeight={format.videoHeight}
+        viewWidth={viewSize.width}
+        viewHeight={viewSize.height}
+      />
       <TakePhotoButton cameraRef={camera} />
     </View>
   );

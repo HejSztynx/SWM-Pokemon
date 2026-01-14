@@ -13,7 +13,13 @@
         "googleMapsApiKey": "process.env.GOOGLE_MAPS_API_KEY"
       },
       "supportsTablet": true,
-      "bundleIdentifier": "com.sienkiewicz.pokemonapp"
+      "bundleIdentifier": "com.sienkiewicz.pokemonapp",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs access to the camera to take photos.",
+        "NSPhotoLibraryAddUsageDescription": "This app needs access to save photos to your library.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photos to save new pictures.",
+        "NSMicrophoneUsageDescription": "This app needs access to the microphone for camera features."
+      }
     },
     "android": {
       "config": {
