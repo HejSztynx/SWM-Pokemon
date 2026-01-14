@@ -39,10 +39,10 @@ export default function TakePhotoButton({
 
 const styles = StyleSheet.create({
   button: {
-    width: 70, // Diameter of the outer circle
-    height: 70, // Diameter of the outer circle
-    borderRadius: 35, // Half of the width/height
-    backgroundColor: "white", // Outer circle color
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#000",
@@ -56,9 +56,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   innerCircle: {
-    width: 62, // Diameter of the inner circle
-    height: 62, // Diameter of the inner circle
-    borderRadius: 31, // Half of the width/height
-    backgroundColor: "blue", // Inner circle color
+    width: 62,
+    height: 62,
+    borderRadius: 31,
+    backgroundColor: "blue",
   },
 });

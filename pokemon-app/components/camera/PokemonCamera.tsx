@@ -110,10 +110,12 @@ export default function App() {
       />
       <DetectedFaces
         faces={faces}
-        cameraWidth={format.videoWidth}
-        cameraHeight={format.videoHeight}
-        viewWidth={viewSize.width}
-        viewHeight={viewSize.height}
+        cameraViewDimensions={{
+          cameraHeight: format.videoHeight,
+          cameraWidth: format.videoWidth,
+          viewHeight: viewSize.height,
+          viewWidth: viewSize.width,
+        }}
       />
       <TakePhotoButton cameraRef={camera} />
     </View>
