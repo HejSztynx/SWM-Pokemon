@@ -5,6 +5,16 @@ export default function TabLayout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: "blue" }}>
       <Tabs.Screen
+        name="reanimated"
+        options={{
+          tabBarLabel: "Reanimated",
+          headerTitle: "Reanimated",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="bedroom-baby" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="index"
         options={{
           tabBarLabel: "Favorite",

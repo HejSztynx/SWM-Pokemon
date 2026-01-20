@@ -52,10 +52,6 @@ export default function App() {
       return;
     }
 
-    device.formats.forEach((entry) => {
-      //   console.log(entry);
-    });
-
     (async () => {
       const status = await Camera.requestCameraPermission();
       console.log({ status });
@@ -63,14 +59,6 @@ export default function App() {
   }, [device]);
 
   const handleDetectedFaces = Worklets.createRunOnJS((faces: Face[]) => {
-    if (faces.length > 0) {
-      console.log(
-        format?.videoHeight,
-        format?.videoWidth,
-        "faces detected",
-        faces
-      );
-    }
     setFaces(faces);
   });
 
@@ -83,7 +71,7 @@ export default function App() {
         handleDetectedFaces(faces);
       });
     },
-    [handleDetectedFaces]
+    [handleDetectedFaces],
   );
 
   if (!device || !format) {

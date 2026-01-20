@@ -13,7 +13,7 @@
         "googleMapsApiKey": "process.env.GOOGLE_MAPS_API_KEY"
       },
       "supportsTablet": true,
-      "bundleIdentifier": "com.sienkiewicz.pokemonapp",
+      "bundleIdentifier": "com.sienkiewicz.swm.pokemonapp",
       "infoPlist": {
         "NSCameraUsageDescription": "This app needs access to the camera to take photos.",
         "NSPhotoLibraryAddUsageDescription": "This app needs access to save photos to your library.",
@@ -72,8 +72,9 @@
             "minSdkVersion": 26
           },
           "ios": {
-            "deploymentTarget": "18.5",
+            "deploymentTarget": "16.0",
             "buildReactNativeFromSource": true
+            // "useFrameworks": "static"
           }
         }
       ],

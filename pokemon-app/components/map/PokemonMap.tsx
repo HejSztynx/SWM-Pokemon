@@ -14,37 +14,15 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function PokemonMap() {
-  //   const initialRegion = {
-  //     latitude: 50.048712769315074,
-  //     longitude: 19.96560463299045,
-  //     latitudeDelta: 0.0922,
-  //     longitudeDelta: 0.0421,
-  //   };
-
   const { favoritePokemon } = usePokemonContext();
 
   const [markers, setMarkers] = useState<PokemonMarker[]>([]);
 
-  //   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalMarker, setModalMarker] = useState<PokemonMarker | null>(null);
 
   const bottomSheetRef = useRef(null);
 
-  const initialRegion = {
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  };
-
-  const [region, setRegion] = useState(initialRegion);
-
-  const handleRegionChange = (region: Region) => {
-    setRegion(region);
-    console.log("region change");
-  };
-
-  const [bottomSheetIndex, setBottomSheetIndex] = useState(-1); // Start closed
+  const [bottomSheetIndex, setBottomSheetIndex] = useState(-1);
 
   const openPokemonModal = (marker: PokemonMarker) => {
     setModalMarker(marker);
@@ -65,13 +43,7 @@ export default function PokemonMap() {
   return (
     <GestureHandlerRootView>
       <View style={styles.container}>
-        <MapView
-          style={styles.map}
-          // region={region}
-          // initialRegion={region}
-          // onRegionChangeComplete={handleRegionChange}
-          onLongPress={placeMarker}
-        >
+        <MapView style={styles.map} onLongPress={placeMarker}>
           {markers.map((marker, index) => (
             <Marker
               key={index}

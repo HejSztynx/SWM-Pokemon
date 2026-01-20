@@ -10,7 +10,7 @@ export interface CameraViewDimensions {
 
 export const adjustboundsCoords = (
   faces: Face[],
-  cameraViewDimensions: CameraViewDimensions
+  cameraViewDimensions: CameraViewDimensions,
 ): Face[] => {
   const { cameraHeight, cameraWidth, viewHeight, viewWidth } =
     cameraViewDimensions;
@@ -25,7 +25,6 @@ export const adjustboundsCoords = (
 
   return faces.map((face) => {
     if (Platform.OS === "ios") {
-      console.log("swap ios");
       const temp = face.bounds.x;
       face.bounds.x = face.bounds.y;
       face.bounds.y = temp;
