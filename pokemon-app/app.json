@@ -15,11 +15,12 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.sienkiewicz.swm.pokemonapp",
       "infoPlist": {
-        "NSCameraUsageDescription": "This app needs access to the camera to take photos.",
+        "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera.",
         "NSPhotoLibraryAddUsageDescription": "This app needs access to save photos to your library.",
         "NSPhotoLibraryUsageDescription": "This app needs access to your photos to save new pictures.",
         "NSMicrophoneUsageDescription": "This app needs access to the microphone for camera features."
-      }
+      },
+      "appleTeamId": "J5FM626PE2"
     },
     "android": {
       "config": {
@@ -29,7 +30,10 @@
       },
       "permissions": [
         "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.INTERNET"
+        "android.permission.INTERNET",
+        "android.permission.CAMERA",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
       ],
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
@@ -74,7 +78,6 @@
           "ios": {
             "deploymentTarget": "16.0",
             "buildReactNativeFromSource": true
-            // "useFrameworks": "static"
           }
         }
       ],
