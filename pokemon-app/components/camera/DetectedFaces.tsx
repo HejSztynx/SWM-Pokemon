@@ -1,15 +1,15 @@
 import { Image } from "expo-image";
 import { Platform, StyleSheet, View } from "react-native";
-// import { Face } from "react-native-vision-camera-face-detector";
+import { Face } from "react-native-vision-camera-face-detector";
 import { usePokemonContext } from "../context/PokemonContext";
 import React from "react";
 import {
-  // adjustboundsCoords,
+  adjustboundsCoords,
   CameraViewDimensions,
 } from "./detectedFacesProcessor";
 
 interface DetectedFacesProps {
-  // faces: Face[];
+  faces: Face[];
   cameraViewDimensions: CameraViewDimensions;
 }
 
@@ -17,17 +17,17 @@ const imageDim = 200;
 const DOT_SIZE = 20;
 
 export default function DetectedFaces({
-  // faces,
+  faces,
   cameraViewDimensions,
 }: DetectedFacesProps) {
   const { favoritePokemon } = usePokemonContext();
 
-  // const adjustedFaces = adjustboundsCoords(faces, cameraViewDimensions);
+  const adjustedFaces = adjustboundsCoords(faces, cameraViewDimensions);
   const pokemonImageUrl = favoritePokemon?.imageUrl;
 
   return (
     <View style={{ flex: 1 }}>
-      {/* {adjustedFaces.map((face, faceIndex) => (
+      {adjustedFaces.map((face, faceIndex) => (
         <Image
           key={faceIndex}
           source={{ uri: pokemonImageUrl }}
@@ -41,7 +41,7 @@ export default function DetectedFaces({
           ]}
           cachePolicy="memory-disk"
         />
-      ))} */}
+      ))}
     </View>
   );
 }

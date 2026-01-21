@@ -7,11 +7,11 @@ import {
   useCameraFormat,
   useFrameProcessor,
 } from "react-native-vision-camera";
-// import {
-//   Face,
-//   useFaceDetector,
-//   FrameFaceDetectionOptions,
-// } from "react-native-vision-camera-face-detector";
+import {
+  Face,
+  useFaceDetector,
+  FrameFaceDetectionOptions,
+} from "react-native-vision-camera-face-detector";
 import { Worklets } from "react-native-worklets-core";
 import DetectedFaces from "./DetectedFaces";
 import { useIsFocused } from "@react-navigation/native";
@@ -33,22 +33,22 @@ export default function App() {
     { photoResolution: "max" },
   ]);
 
-  // const faceDetectionOptions = useRef<FrameFaceDetectionOptions>({}).current;
+  const faceDetectionOptions = useRef<FrameFaceDetectionOptions>({}).current;
 
-  // const [faces, setFaces] = useState<Face[]>([]);
-  // const { detectFaces, stopListeners } = useFaceDetector(faceDetectionOptions);
+  const [faces, setFaces] = useState<Face[]>([]);
+  const { detectFaces, stopListeners } = useFaceDetector(faceDetectionOptions);
 
   useEffect(() => {
     return () => {
       // you must call `stopListeners` when current component is unmounted
-      // stopListeners();
+      stopListeners();
     };
   }, []);
 
   useEffect(() => {
     if (!device) {
       // you must call `stopListeners` when `Camera` component is unmounted
-      // stopListeners();
+      stopListeners();
       return;
     }
 
@@ -58,22 +58,21 @@ export default function App() {
     })();
   }, [device]);
 
-  // const handleDetectedFaces = Worklets.createRunOnJS((faces: Face[]) => {
-  // setFaces(faces);
-  // });
+  const handleDetectedFaces = Worklets.createRunOnJS((faces: Face[]) => {
+    setFaces(faces);
+  });
 
-  // const frameProcessor = useFrameProcessor(
-  //   (frame) => {
-  //     "worklet";
-  //     runAsync(frame, () => {
-  //       "worklet";
-  //       // const faces = detectFaces(frame);
-  //       const faces: Face[] = [];
-  //       handleDetectedFaces(faces);
-  //     });
-  //   },
-  //   [handleDetectedFaces],
-  // );
+  const frameProcessor = useFrameProcessor(
+    (frame) => {
+      "worklet";
+      runAsync(frame, () => {
+        "worklet";
+        const faces = detectFaces(frame);
+        handleDetectedFaces(faces);
+      });
+    },
+    [handleDetectedFaces],
+  );
 
   if (!device || !format) {
     return <Text>No Device</Text>;
@@ -94,11 +93,11 @@ export default function App() {
         format={format}
         isActive={isActive}
         photo={true}
-        // frameProcessor={frameProcessor}
+        frameProcessor={frameProcessor}
         resizeMode="cover"
       />
       <DetectedFaces
-        // faces={faces}
+        faces={faces}
         cameraViewDimensions={{
           cameraHeight: format.videoHeight,
           cameraWidth: format.videoWidth,
